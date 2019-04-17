@@ -42,7 +42,9 @@ fn main() {
         .connect("intake.logs.datad0g.com", stream)
         .unwrap();
 
-    let session_id = i(int) (999 * rng.gen()); // generates a float between 0 and 1
+    let fsession: f64 = rng.gen();
+
+    let session_id = (999.0 * fsession).trunc() as i32; // generates a float between 0 and 1
 
     let identifier = format!("sess{}", session_id);
     println!("https://dd.datad0g.com/logs?cols=event&index=main&live=true&query=source%3Alog-pipe+service%3Acli-client+session%3A{}&sort=desc&stream_sort=desc", identifier);
