@@ -10,6 +10,7 @@ use serde_json;
 
 use log::{info, trace};
 
+use rand::prelude::*;
 
 fn build_doc(content: String, user: &str, identifier: &str) -> HashMap<String, String> {
     let mut doc = HashMap::new();
@@ -26,6 +27,8 @@ fn build_doc(content: String, user: &str, identifier: &str) -> HashMap<String, S
 
 fn main() {
     pretty_env_logger::init();
+    let mut rng = rand::thread_rng();
+
     let hostname = env::var("DD_HOSTNAME").unwrap_or(String::from("intake.logs.datad0g.com"));
     let user = env::var("USER").unwrap_or(String::from("no-user"));
     let api_key = env::var("DD_API_KEY").unwrap_or(String::from("NOKEY"));
@@ -39,7 +42,9 @@ fn main() {
         .connect("intake.logs.datad0g.com", stream)
         .unwrap();
 
-    let identifier = format!("sess{}", 23);
+    let session_id = i(int) (999 * rng.gen()); // generates a float between 0 and 1
+
+    let identifier = format!("sess{}", session_id);
     println!("https://dd.datad0g.com/logs?cols=event&index=main&live=true&query=source%3Alog-pipe+service%3Acli-client+session%3A{}&sort=desc&stream_sort=desc", identifier);
 
     let stdin = io::stdin();
