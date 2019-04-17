@@ -2,6 +2,10 @@
 
 Send any text to datadog log quickly.
 
+# Get it!
+
+- [there](https://github.com/octplane/logdog/releases)
+
 # Usage
 
 ## Configuration
@@ -30,6 +34,7 @@ Open the returned url:
 
 - generated URL is very stupid and use hardcoded settings everywhere
 - not very well tested (help me with that)
+- only macOS version for now
 
 # Build it
 
