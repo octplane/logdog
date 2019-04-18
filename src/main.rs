@@ -29,17 +29,20 @@ fn main() {
     pretty_env_logger::init();
     let mut rng = rand::thread_rng();
 
-    let hostname = env::var("DD_HOSTNAME").unwrap_or(String::from("intake.logs.datad0g.com"));
+    let site = env::var("DD_SITE").unwrap_or(String::from("datadoghq.com"));
+    let dd_url =  env::var("DD_URL").unwrap_or(String::from("https://app.datadoghq.com"));
+
     let user = env::var("USER").unwrap_or(String::from("no-user"));
     let api_key = env::var("DD_API_KEY").unwrap_or(String::from("NOKEY"));
-    let remote_host = format!("{}:10516", hostname);
+    let remote_host = format!("intake.logs.{}", site);
+    let tcp_remote = format!("{}:10516", remote_host);
 
     let connector = TlsConnector::new().unwrap();
     info!("Using remote: {}", remote_host);
 
-    let stream = TcpStream::connect(remote_host).unwrap();
+    let stream = TcpStream::connect(tcp_remote).unwrap();
     let mut stream = connector
-        .connect("intake.logs.datad0g.com", stream)
+        .connect(&remote_host, stream)
         .unwrap();
 
     let fsession: f64 = rng.gen();
@@ -47,7 +50,7 @@ fn main() {
     let session_id = (999.0 * fsession).trunc() as i32; // generates a float between 0 and 1
 
     let identifier = format!("sess{}", session_id);
-    println!("https://dd.datad0g.com/logs?cols=event&index=main&live=true&query=source%3Alog-pipe+service%3Acli-client+session%3A{}&sort=desc&stream_sort=desc", identifier);
+    println!("{}/logs?cols=event&index=main&live=true&query=source%3Alog-pipe+service%3Acli-client+session%3A{}&sort=desc&stream_sort=desc", dd_url,identifier);
 
     let stdin = io::stdin();
     for line in stdin.lock().lines() {

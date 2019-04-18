@@ -11,13 +11,14 @@ Send any text to datadog log quickly.
 ## Configuration
 
 - `DD_API_KEY` in your env. **mandatory**
-- `DD_HOSTNAME` to target another logs endpoint **optionnal**
+- `DD_SITE` to target another sire. Defaults to datadoghq.com. Logdog will use `intake.logs.${DD_SITE}:10516`
+- `DD_URL`: your base datadog url. Defaults to https://app.datadoghq.com/
 
 ## Run
 
 ```shell
-> cat whatever.log | logdog
-https://dd.datad0g.com/logs? \
+> logdog < whatever.log
+https://app.datadogh.com/logs? \
    cols=event& \
    index=main& \
    live=true& \
